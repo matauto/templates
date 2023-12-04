@@ -1,0 +1,105 @@
+"INFO--------------------------------------------------------------------
+"copy this file to ~/.vimrc
+"
+"optionally install plugin manager and create directories
+"mkdir -p ~/.vim ~/.vim/autoload ~/.vim/backup ~/.vim/colors ~/.vim/plugged
+"
+"this is very basic configuration
+"propably also not best one
+"and will evolve in future
+"
+"GENERAL----------------------------------------------------------------
+"compability with vi off
+set nocompatible
+"file type detection
+filetype on
+"enable plugins for detected file
+filetype plugin on
+"indent file for detected file
+filetype indent on
+"do not save backup files, use git
+set nobackup
+set nowb
+set noswapfile
+"history capacity, default=20
+set history=100
+"turn off error sounds
+set noerrorbells
+"set regular expression engine automatically
+set regexpengine=0
+"set standard encoding
+set encoding=utf8
+
+"WORKAREA LOOK-----------------------------------------------------------
+"syntax higlighting
+syntax on
+"line numbering
+set number
+"no wrap lines
+set nowrap
+"set file scrolling when moving cursor
+set scrolloff=10
+"show cmd
+set showcmd
+"show the mode you are in the last line
+set showmode
+"show matching brackets
+set showmatch
+"show current position
+set ruler
+"height of command bar
+set cmdheight=1
+
+"COLORSCHEME
+try
+	colorscheme desert
+catch
+endtry
+"background color
+set background=dark
+
+"STATUS LINE
+"clear status line on reload
+set statusline=
+"status line - left side
+set statusline+=\ %F\ %M\ %Y\ %R
+"status line - divider
+set statusline+=!!!
+"status line - right side
+set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
+"show the status on the second to last line
+set laststatus=2
+
+"WILDMENU
+"wildmenu - autocompletion menu after pressing TAB
+set wildmenu
+"wildmenu - behave like bash completion
+set wildmode=list:longest
+"wildmenu - ignore files with this extensions
+set wildignore=*/.git/*,*.o,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.flv,*.img
+
+"FILE FORMATTING----------------------------------------------------------
+"use spaces instead tabs
+set expandtab
+"tab width = 4 spaces
+set shiftwidth=4
+set tabstop=4
+
+"SEARCH SETTINGS---------------------------------------------------------
+"incrementaly highlight matching charaters as you type
+set incsearch
+"ignore capital letters
+set ignorecase
+"but when capital leter is searched ignore ignorecase
+set smartcase
+"highlighting during search
+set hlsearch
+
+"PLUGINS-----------------------------------------------------------------
+"plugin manager need for this
+"example vim-plug install plugins in folder ~/.vim/plugged
+"and need special call here
+"KEY MAPPINGS------------------------------------------------------------
+"do not need yet
+"VIMSCRIPT---------------------------------------------------------------
+"need to explore
