@@ -70,18 +70,21 @@ def process_file(sourcePath, targetPath):
     if os.path.isfile(sourcePath):
          with open(sourcePath,'r') as sourceFile, open(targetPath, 'a') as targetFile:
             for line in sourceFile:
-                matchTag = re.search("<<<(.*?)>>>", line)
-                if matchTag.group():
+                matchTag = re.search(r"(<<<(.*?)>>>)", line)
+                if matchTag:
                     print(line)
                     print(gLongScreenLine)
-                    userInput = input("Replace ", matchTag.group(), ": ")
+                    userInput = input("Replace " + matchTag.group() + ": ")
                     line = re.sub(matchTag.group(), userInput, line)
                     targetFile.write(line)
                     print(gLongScreenLine)
                 else:
                     targetFile.write(line)
                     print(line)
-        
+    else:
+        print("sourcePath is not file")
+        print(sourcePath)
+
 def print_menu(menuOpt):
     regExp = "{q}"
     lowNo = 0
@@ -154,9 +157,11 @@ def main():
             userInput = print_menu('file')
             listOfFolders = get_folder_list((scriptDir + "/NEW_FILES"), 0)
             if listOfFolders:
-                newProjectDir = scriptDir + "/NEW_FILES/" + listOfFolders[int(userInput)-1]
-                print(newProjectDir)
+                newFileDir = scriptDir + "/NEW_FILES/" + listOfFolders[int(userInput)-1]
+                print(newFileDir)
                 userInput = print_menu('get_name')
+                targetFilePath = pathDir.absolute().as_posix() + "/" + userInput + ".py"
+                process_file(newFileDir + "/fileName1.py", targetFilePath)
         else:
             print("error")
     else:
