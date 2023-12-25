@@ -1,0 +1,3 @@
+This is template for linux administration, files manipulation.
+Parts, which will be filled are in "<<<" and ">>>" tags.
+You can add your own tags.
