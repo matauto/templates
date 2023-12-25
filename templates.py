@@ -36,6 +36,11 @@ args = parser.parse_args()
 scriptDir = sys.path[0]
 pathDir = Path(args.path)
 gLongScreenLine = "------------------------------------------------------------"
+gSpecialFiles = ['description.txt', 'postBash.sh', 'postPython.py']
+
+def clear_screen():
+    #\033[ is Control Sequence Introducer.
+    print("\033[H\033[2J", end = '')
 
 def validateInput(regExp, lowNo, highNo, usrIn):
     if (lowNo != 0 or highNo != 0) and re.match("^[0-9]+$", usrIn):
@@ -66,13 +71,33 @@ def get_folder_list(pathToFolder, doPrint):
                 n = n + 1
     return listOfFolders
 
+def get_files_list(pathToFolder, doPrint):
+    specialFiles = gSpecialFiles
+    n = 1
+    if doPrint:
+        print(pathToFolder)
+    listOfFiles = []
+    for root, folder, files in os.walk(pathToFolder):
+        if n == 1:
+            for item in files:
+                if not (item in specialFiles):
+                    if doPrint:
+                        print(n,"\t",item)
+                    listOfFiles.append(item)
+                    n = n + 1
+    return listOfFiles
+
 def process_file(sourcePath, targetPath):
     if os.path.isfile(sourcePath):
-         with open(sourcePath,'r') as sourceFile, open(targetPath, 'a') as targetFile:
+        print(gLongScreenLine)
+        print("Edit file: " + targetPath)
+        print(gLongScreenLine)
+        
+        with open(sourcePath,'r') as sourceFile, open(targetPath, 'a') as targetFile:
             for line in sourceFile:
                 matchTag = re.search(r"(<<<(.*?)>>>)", line)
                 if matchTag:
-                    print(line)
+                    print(line, end='')
                     print(gLongScreenLine)
                     userInput = input("Replace " + matchTag.group() + ": ")
                     line = re.sub(matchTag.group(), userInput, line)
@@ -80,7 +105,7 @@ def process_file(sourcePath, targetPath):
                     print(gLongScreenLine)
                 else:
                     targetFile.write(line)
-                    print(line)
+                    print(line, end='')
     else:
         print("sourcePath is not file")
         print(sourcePath)
@@ -92,6 +117,7 @@ def print_menu(menuOpt):
     print(gLongScreenLine)
     match menuOpt:
         case 'start':
+            clear_screen()
             print("TEMPLATES")
             print("github.com/matauto/templates")
             print(gLongScreenLine)
@@ -103,6 +129,7 @@ def print_menu(menuOpt):
             print("\nType 'q' to quit")
             print(gLongScreenLine)
         case 'project':
+            clear_screen()
             print("NEW PROJECT")
             print(gLongScreenLine)
             pathNewProject = scriptDir + "/NEW_PROJECT"
@@ -116,6 +143,7 @@ def print_menu(menuOpt):
             print("\nType 'q' to quit")
             print(gLongScreenLine)
         case 'file':
+            clear_screen()
             print("NEW FILE")
             print(gLongScreenLine)
             pathNewProject = scriptDir + "/NEW_FILES"
@@ -155,13 +183,21 @@ def main():
                 print(newProjectDir)
         elif userInput == "2":
             userInput = print_menu('file')
+            clear_screen()
             listOfFolders = get_folder_list((scriptDir + "/NEW_FILES"), 0)
             if listOfFolders:
-                newFileDir = scriptDir + "/NEW_FILES/" + listOfFolders[int(userInput)-1]
-                print(newFileDir)
-                userInput = print_menu('get_name')
-                targetFilePath = pathDir.absolute().as_posix() + "/" + userInput + ".py"
-                process_file(newFileDir + "/fileName1.py", targetFilePath)
+                newFileDir = scriptDir + "/NEW_FILES/" + listOfFolders[int(userInput)-1] + "/"
+                listOfFiles = get_files_list(newFileDir, 1)
+                for file in listOfFiles:
+                    print("\n")
+                    print(file)
+                    userInput = print_menu('get_name')
+                    targetPath = pathDir.absolute().as_posix() + "/" + userInput
+                    fileExt = re.search("\.\w+$", file)
+                    if fileExt:
+                        targetPath = targetPath + fileExt.group()
+                    clear_screen()
+                    process_file(newFileDir + file, targetPath)
         else:
             print("error")
     else:
