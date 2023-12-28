@@ -87,6 +87,15 @@ def get_files_list(pathToFolder, doPrint):
                     n = n + 1
     return listOfFiles
 
+def display_description_file(pathToDir):
+    specialFiles = gSpecialFiles
+    for item in specialFiles:
+        if re.match(".+\.txt$", item):
+            with open(pathToDir + item) as file:
+                for line in file:
+                    print(line, end='')
+                print("")
+
 def process_file(sourcePath, targetPath):
     if os.path.isfile(sourcePath):
         print(gLongScreenLine)
@@ -187,6 +196,7 @@ def main():
             listOfFolders = get_folder_list((scriptDir + "/NEW_FILES"), 0)
             if listOfFolders:
                 newFileDir = scriptDir + "/NEW_FILES/" + listOfFolders[int(userInput)-1] + "/"
+                display_description_file(newFileDir)
                 listOfFiles = get_files_list(newFileDir, 1)
                 for file in listOfFiles:
                     print("\n")
