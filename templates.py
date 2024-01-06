@@ -44,6 +44,18 @@ def clear_screen():
     #\033[ is Control Sequence Introducer.
     print("\033[H\033[2J", end = '')
 
+def color_text(orgText, colorName):
+    resetCode = "\033[0m"
+    if colorName == "red":
+        colorCode = "\033[31m"
+    elif colorName == "green":
+        colorCode = "\033[32m"
+    else:
+        return orgText
+
+    coloredText = colorCode + orgText + resetCode
+    return coloredText
+
 def validateInput(regExp, lowNo, highNo, usrIn):
     if (lowNo != 0 or highNo != 0) and re.match("^[0-9]+$", usrIn):
         if int(usrIn) >= lowNo and int(usrIn) <= highNo:
@@ -124,32 +136,32 @@ def auto_fill_tag(tagName):
 
 def process_file(sourcePath, targetPath):
     if os.path.isfile(sourcePath):
-        print(gLongScreenLine)
-        print("Edit file: " + targetPath)
-        print(gLongScreenLine)
+        print(color_text(gLongScreenLine, "green"))
+        print(color_text("Edit file: " + targetPath, "green"))
+        print(color_text(gLongScreenLine, "green"))
         
         with open(sourcePath,'r') as sourceFile, open(targetPath, 'a') as targetFile:
             for line in sourceFile:
                 matchTag = re.search(r"(<<<(.*?)>>>)", line)
                 if matchTag:
                     print(line, end='')
-                    print(gLongScreenLine)
+                    print(color_text(gLongScreenLine, "green"))
                     autoFill = auto_fill_tag(matchTag.group())
                     if autoFill:
-                        print("Press enter to autoFill: ", end='')
-                        print(autoFill)
-                    userInput = input("Replace " + matchTag.group() + ": ")
+                        print(color_text("Press enter to autoFill: ", "green"), end='')
+                        print(color_text(autoFill, "green"))
+                    userInput = input(color_text("Replace " + matchTag.group() + ": ", "green"))
                     if userInput == "" and autoFill:
                         userInput = autoFill
                     line = re.sub(matchTag.group(), userInput, line)
                     targetFile.write(line)
-                    print(gLongScreenLine)
+                    print(color_text(gLongScreenLine, "green"))
                 else:
                     targetFile.write(line)
                     print(line, end='')
     else:
         print("sourcePath is not file")
-        print(sourcePath)
+        print(color_text(sourcePath, "red"))
 
 def print_menu(menuOpt):
     regExp = "{q}"
@@ -243,7 +255,7 @@ def main():
         else:
             print("error")
     else:
-        print("path is not directory")
+        print(color_text("path is not directory", "red"))
 
 if __name__ == "__main__":
     main()
