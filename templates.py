@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import shutil
 import re
+import subprocess
 #from datetime import datetime
 
 #parse input arguments
@@ -37,6 +38,7 @@ scriptDir = sys.path[0]
 pathDir = Path(args.path)
 gLongScreenLine = "------------------------------------------------------------"
 gSpecialFiles = ['description.txt', 'postBash.sh', 'postPython.py']
+gAutoFillFile = scriptDir + '/autoFillTag.conf'
 
 def clear_screen():
     #\033[ is Control Sequence Introducer.
@@ -96,6 +98,30 @@ def display_description_file(pathToDir):
                     print(line, end='')
                 print("")
 
+def auto_fill_tag(tagName):
+    configFile = gAutoFillFile
+    with open(configFile,'r') as tagFile:
+        for line in tagFile:
+            matchTag = re.search(r"(^<<<.*?>>>)=(.*?$)", line)
+            if matchTag:
+                if matchTag.group(1) == tagName:
+                    #print("Empty, replaced with: ", end='')
+                    searchResult = re.search(r"(!cmd:)(.*?$)", matchTag.group(2))
+                    if searchResult:
+                        #print(searchResult.group(2))
+                        commandResult = subprocess.check_output([searchResult.group(2)], shell=True)
+                        cmdRes2 = re.search(r"b'(.*?)\\n'", str(commandResult))
+                        if cmdRes2:
+                            commandResult = cmdRes2.group(1)
+                        #print(cmdRes2.group(1))
+                        #print(str(commandResult))
+                        return str(commandResult)
+                    else:
+                        #print(matchTag.group(2))
+                        return matchTag.group(2)
+    #print("Tag not listed in auto fill config file")
+    return ""
+
 def process_file(sourcePath, targetPath):
     if os.path.isfile(sourcePath):
         print(gLongScreenLine)
@@ -108,7 +134,13 @@ def process_file(sourcePath, targetPath):
                 if matchTag:
                     print(line, end='')
                     print(gLongScreenLine)
+                    autoFill = auto_fill_tag(matchTag.group())
+                    if autoFill:
+                        print("Press enter to autoFill: ", end='')
+                        print(autoFill)
                     userInput = input("Replace " + matchTag.group() + ": ")
+                    if userInput == "" and autoFill:
+                        userInput = autoFill
                     line = re.sub(matchTag.group(), userInput, line)
                     targetFile.write(line)
                     print(gLongScreenLine)
