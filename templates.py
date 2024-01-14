@@ -50,10 +50,14 @@ def color_text(orgText, colorName):
         colorCode = "\033[31m"
     elif colorName == "green":
         colorCode = "\033[32m"
+    elif colorName == "yellow":
+        colorCode = "\033[33m"
+    elif colorName == "blue":
+        colorCode = "\033[34m"
     else:
         return orgText
 
-    coloredText = colorCode + orgText + resetCode
+    coloredText = colorCode + str(orgText) + resetCode
     return coloredText
 
 def validateInput(regExp, lowNo, highNo, usrIn):
@@ -80,7 +84,7 @@ def get_folder_list(pathToFolder, doPrint):
         if n == 1:
             for item in folder:
                 if doPrint:
-                    print(n,"\t",item)
+                    print(color_text(n, "red"),"\t",item)
                 listOfFolders.append(item)
                 n = n + 1
     return listOfFolders
@@ -96,7 +100,7 @@ def get_files_list(pathToFolder, doPrint):
             for item in files:
                 if not (item in specialFiles):
                     if doPrint:
-                        print(n,"\t",item)
+                        print(color_text(n, "red"),"\t",item)
                     listOfFiles.append(item)
                     n = n + 1
     return listOfFiles
@@ -110,7 +114,32 @@ def display_description_file(pathToDir):
                     print(line, end='')
                 print("")
 
-def auto_fill_tag(tagName):
+def fill_specialTag(tagName, filePath):
+    specialTagsList = ['<<<test>>>', '<<<(fileName)([0-9]+)>>>', '<<<>>>', '<<<(filePath)>>>']
+    for specialTag in specialTagsList:
+        searchResult = re.search(specialTag, tagName)
+        if searchResult:
+            tagSpec = searchResult.group()
+            if tagSpec == "<<<>>>":
+                return ""
+            elif tagSpec[3:6] == "fil": 
+                if searchResult.group(1) == "filePath":
+                    return filePath
+                elif searchResult.group(1) == "fileName":
+                    fileNameRe = re.search(r"(.+?)\/(\w+?\.?\w+)$", filePath)
+                    if fileNameRe:
+                        return fileNameRe.group(2)
+                    else:
+                        print("fill_specialTag: fileNameRe do not found")
+            else:
+                print(tagSpec)
+    return ""
+
+def auto_fill_tag(tagName, filePath):
+    spTagResult = fill_specialTag(tagName, filePath)
+    if spTagResult != "":
+        return spTagResult
+
     configFile = gAutoFillFile
     with open(configFile,'r') as tagFile:
         for line in tagFile:
@@ -146,7 +175,7 @@ def process_file(sourcePath, targetPath):
                 if matchTag:
                     print(line, end='')
                     print(color_text(gLongScreenLine, "green"))
-                    autoFill = auto_fill_tag(matchTag.group())
+                    autoFill = auto_fill_tag(matchTag.group(), targetPath)
                     if autoFill:
                         print(color_text("Press enter to autoFill: ", "green"), end='')
                         print(color_text(autoFill, "green"))
@@ -175,8 +204,8 @@ def print_menu(menuOpt):
             print("github.com/matauto/templates")
             print(gLongScreenLine)
             print("Choose what you want to do:")
-            print("1 Create new project.")
-            print("2 Create new files.")
+            print(color_text("1 ", "red") + "Create new project.")
+            print(color_text("2 ", "red") + "Create new files.")
             lowNo = 1
             highNo = 2
             print("\nType 'q' to quit")
