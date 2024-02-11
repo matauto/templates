@@ -192,7 +192,24 @@ def process_file(sourcePath, targetPath):
         print("sourcePath is not file")
         print(color_text(sourcePath, "red"))
 
-def print_menu(menuOpt):
+def path_have_folders(startPath):
+    listOfFolders = get_folder_list(startPath, 0)
+    if listOfFolders:
+        return 1
+    else:
+        return 0
+
+def get_template_path(menuOpt, startPath):
+    tempPath = startPath
+    while path_have_folders(tempPath):
+        userInput = print_menu(menuOpt, tempPath)
+        listOfFolders = get_folder_list(tempPath, 0)
+        if listOfFolders:
+            tempPath = tempPath + "/" + listOfFolders[int(userInput)-1]
+    tempPath = tempPath + "/"
+    return tempPath
+
+def print_menu(menuOpt, menuDetails):
     regExp = "{q}"
     lowNo = 0
     highNo = 0
@@ -214,7 +231,7 @@ def print_menu(menuOpt):
             clear_screen()
             print("NEW PROJECT")
             print(gLongScreenLine)
-            pathNewProject = scriptDir + "/NEW_PROJECT"
+            pathNewProject = menuDetails
             listOfFolders = get_folder_list(pathNewProject, 1)
             if listOfFolders:
                 lowNo = 1
@@ -228,7 +245,7 @@ def print_menu(menuOpt):
             clear_screen()
             print("NEW FILE")
             print(gLongScreenLine)
-            pathNewProject = scriptDir + "/NEW_FILES"
+            pathNewProject = menuDetails
             listOfFolders = get_folder_list(pathNewProject, 1)
             if listOfFolders:
                 lowNo = 1
@@ -256,25 +273,29 @@ def print_menu(menuOpt):
 
 def main():
     if (pathDir.exists() and pathDir.is_dir()):
-        userInput = print_menu('start')
+        userInput = print_menu('start', "")
         if userInput == "1":
-            userInput = print_menu('project')
-            listOfFolders = get_folder_list((scriptDir + "/NEW_PROJECT"), 0)
-            if listOfFolders:
-                newProjectDir = scriptDir + "/NEW_PROJECT/" + listOfFolders[int(userInput)-1]
-                print(newProjectDir)
+            newProjectDir = scriptDir + "/NEW_PROJECT"
+            #get from user the template folder(that with files without folders)
+            newProjectDir = get_template_path('project', newProjectDir)
+            print(newProjectDir)
         elif userInput == "2":
-            userInput = print_menu('file')
+            newFileDir = scriptDir + "/NEW_FILES"
+            #get from user th template folder
+            newFileDir = get_template_path('file', newFileDir)
             clear_screen()
-            listOfFolders = get_folder_list((scriptDir + "/NEW_FILES"), 0)
-            if listOfFolders:
-                newFileDir = scriptDir + "/NEW_FILES/" + listOfFolders[int(userInput)-1] + "/"
-                display_description_file(newFileDir)
-                listOfFiles = get_files_list(newFileDir, 1)
+            if newFileDir:
+                listOfFiles = get_files_list(newFileDir, 0)
+                numFile = 0
                 for file in listOfFiles:
+                    numFile = numFile + 1
+                    clear_screen()
+                    display_description_file(newFileDir)
+                    get_files_list(newFileDir, 1)
                     print("\n")
+                    print(color_text(numFile, "red"), end=' ')
                     print(file)
-                    userInput = print_menu('get_name')
+                    userInput = print_menu('get_name',"")
                     targetPath = pathDir.absolute().as_posix() + "/" + userInput
                     fileExt = re.search("\.\w+$", file)
                     if fileExt:
