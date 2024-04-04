@@ -173,18 +173,20 @@ def process_file(sourcePath, targetPath):
             for line in sourceFile:
                 matchTag = re.search(r"(<<<(.*?)>>>)", line)
                 if matchTag:
-                    print(line, end='')
-                    print(color_text(gLongScreenLine, "green"))
-                    autoFill = auto_fill_tag(matchTag.group(), targetPath)
-                    if autoFill:
-                        print(color_text("Press enter to autoFill: ", "green"), end='')
-                        print(color_text(autoFill, "green"))
-                    userInput = input(color_text("Replace " + matchTag.group() + ": ", "green"))
-                    if userInput == "" and autoFill:
-                        userInput = autoFill
-                    line = re.sub(matchTag.group(), userInput, line)
+                    while matchTag:
+                        print(line, end='')
+                        print(color_text(gLongScreenLine, "green"))
+                        autoFill = auto_fill_tag(matchTag.group(), targetPath)
+                        if autoFill:
+                            print(color_text("Press enter to autoFill: ", "green"), end='')
+                            print(color_text(autoFill, "green"))
+                        userInput = input(color_text("Replace " + matchTag.group() + ": ", "green"))
+                        if userInput == "" and autoFill:
+                            userInput = autoFill
+                        line = re.sub(matchTag.group(), userInput, line)
+                        print(color_text(gLongScreenLine, "green"))
+                        matchTag = re.search(r"(<<<(.*?)>>>)", line)
                     targetFile.write(line)
-                    print(color_text(gLongScreenLine, "green"))
                 else:
                     targetFile.write(line)
                     print(line, end='')
