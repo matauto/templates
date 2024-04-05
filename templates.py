@@ -109,10 +109,13 @@ def display_description_file(pathToDir):
     specialFiles = gSpecialFiles
     for item in specialFiles:
         if re.match(".+\.txt$", item):
-            with open(pathToDir + item) as file:
-                for line in file:
-                    print(line, end='')
-                print("")
+            if os.path.isfile(pathToDir + item):
+                with open(pathToDir + item) as file:
+                    for line in file:
+                        print(line, end='')
+                    print("")
+            else:
+                print("No description file found for template")
 
 def fill_specialTag(tagName, filePath):
     specialTagsList = ['<<<test>>>', '<<<(fileName)([0-9]+)>>>', '<<<>>>', '<<<(filePath)>>>']
@@ -205,6 +208,8 @@ def get_template_path(menuOpt, startPath):
     tempPath = startPath
     while path_have_folders(tempPath):
         userInput = print_menu(menuOpt, tempPath)
+        if userInput == "q":
+            exit()
         listOfFolders = get_folder_list(tempPath, 0)
         if listOfFolders:
             tempPath = tempPath + "/" + listOfFolders[int(userInput)-1]
