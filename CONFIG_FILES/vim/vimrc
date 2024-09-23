@@ -17,6 +17,8 @@ filetype on
 filetype plugin on
 "indent file for detected file
 filetype indent on
+"filetype detection to not default extensions
+autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 "do not save backup files, use git
 set nobackup
 set nowb
