@@ -1,7 +1,7 @@
 ## TO DO:
 * implement "NEW_PROJECT" option
 * now script is only compatible with linux. Windows compability need changes in python script and auto-tags
-* nested tags need to be implemented - idea for them is for example '<<<FORMAT<<<DATE>>>>>>'
+* nested tags need to be implemented - idea for them is for example '<<&lt;FORMAT<<&lt;DATE>>>>>>'
 * implement --name and --template option for inoking the script
 ## Purpose of the program
 This package is my attempt to create standalone system for text based files, independent from any IDE or text editor.
@@ -16,7 +16,7 @@ of "tag" in the text.
 ## Main program assumptions
 * no hard connection with any IDE or text editor. You are free to use your favorite text editor.
 * python script language for multiplatform(in future, now I concetrate on linux mostly), easy customization, editing and readibility
-* use of "tags" in form of '<<<TAG>>>', which during creation of file from template are replaced interactively by user during script execution
+* use of "tags" in form of '<<&lt;TAG>>>', which during creation of file from template are replaced interactively by user during script execution
 * auto-tags predefined in [autoFillTag.conf](./autoFillTag.conf) file. This auto-tags result in text "advice" proposed for user, which he
 can put as text in replace of TAG by pressing Enter button. Auto-tags include security issue as python run shell commands from 
 [autoFillTag.conf](./autoFillTag.conf)
@@ -34,13 +34,15 @@ template folder the desription.txt file(mandatory) is displayed also list of fil
 ### How it works - NEW_FILES
 After template folder is picked up script will iterate through all files in folder. Each file will be opened and user will be prompted to give a
 new name to file(extension will be copied from orginal file). Script will copy line by line file to new location and during this print line on screen. 
-Each line will be analized and when '<<<TAG>>>' will be detected user will be prompted to react for this event. User always have possibility to insert own text. When aviable 
+Each line will be analized and when '<<&lt;TAG>>>' will be detected user will be prompted to react for this event. User always have possibility to insert own text. When aviable 
 the proposed text will be given if tag is specjal-tag or auto-tag. User must press Enter key to enter proposed text.
 ### How it works - NEW_PROJECT
 NOT IMPLEMENTED YET
 ### How it works - auto-tags from autoFillTag.conf
 You can define auto tag as static text or output from shell command. Shell command is executed when you input '!cmd:' just after '=' sign
-$#will result as plain text "JOE DOE"
-$<<<AUTHOR>>>=JOE DOE
-$#"hostname" command will be exeuted in shell and text result used by script
-$<<<HOSTNAME>>>=!cmd:hostname
+<code>
+will result as plain text "JOE DOE"
+<<&lt;AUTHOR>>>=JOE DOE
+"hostname" command will be executed in shell and text result used by script
+<<&lt;HOSTNAME>>>=!cmd:hostname
+</code>
