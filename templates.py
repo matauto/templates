@@ -153,7 +153,15 @@ def auto_fill_tag(tagName, filePath):
                     searchResult = re.search(r"(!cmd:)(.*?$)", matchTag.group(2))
                     if searchResult:
                         #print(searchResult.group(2))
-                        commandResult = subprocess.check_output([searchResult.group(2)], shell=True)
+                        #check and run procedure for nested tags
+                        commandTag = searchResult.group(2)
+                        searchNested = re.search(r"(<<<(.*?)>>>)", searchResult.group(2))
+                        if searchNested:
+                            replaceNested = auto_fill_tag(searchNested.group(), filePath)
+                            if replaceNested:
+                                commandTag = re.sub(searchNested.group(), replaceNested, searchResult.group(2))
+                        #run command as subprocess
+                        commandResult = subprocess.check_output([commandTag], shell=True)
                         cmdRes2 = re.search(r"b'(.*?)\\n'", str(commandResult))
                         if cmdRes2:
                             commandResult = cmdRes2.group(1)

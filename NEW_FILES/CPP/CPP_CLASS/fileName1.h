@@ -2,20 +2,20 @@
  * Author: <<<AUTHOR>>>
  * Date: <<<DATE>>>
  ----------------------------------------*/
-#ifndef <<<fileName1>>>_H
-#define <<<fileName1>>>_H
+#ifndef <<<INCLUDE_GUARD>>>
+#define <<<INCLUDE_GUARD>>>
 
 //#include<stdlib>
 //#inlude<iostream>
 
-class <<<fileName1>>>
+class <<<fileName1_noEXT>>>
 {
 private:
 
 public:
-    <<<fileName1>>>();
+    <<<fileName1_noEXT>>>();
 
-    ~<<<fileName1>>>();
+    ~<<<fileName1_noEXT>>>();
 };
 
 #endif

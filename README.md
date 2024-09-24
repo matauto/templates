@@ -2,7 +2,7 @@
 * implement "NEW_PROJECT" option
 * now script is only compatible with linux. Windows compability need changes in python script and auto-tags
 * nested tags need to be implemented - idea for them is for example `<<<FORMAT<<<DATE>>>>>>`
-* implement --name and --template option for inoking the script
+* implement --name and --template option for invoking the script
 ## Purpose of the program
 This package is my attempt to create standalone system for text based files, independent from any IDE or text editor.
 I am hobby programmer and I used many IDEs mostly using them once per project on diffrent computers and systems. 
@@ -39,11 +39,17 @@ the proposed text will be given if tag is specjal-tag or auto-tag. User must pre
 ### How it works - NEW_PROJECT
 > NOT IMPLEMENTED YET
 ### How it works - auto-tags from autoFillTag.conf
-You can define auto tag as static text or output from shell command. Shell command is executed when you input '!cmd:' just after '=' sign
-
-```config
+You can define auto tag as static text or output from shell command. Shell command is executed when you input `!cmd:` just after '=' sign
+```
 #will result as plain text "JOE DOE"
 <<<AUTHOR>>>=JOE DOE
 #"hostname" command will be executed in shell and text result used by script
 <<<HOSTNAME>>>=!cmd:hostname
 ```
+#### Nested auto-tags
+Below is a example of nested auto-tag from autoFillTag.conf file:
+```
+<<<INCLUDE_GUARD>>>=!cmd:echo "<<<fileName1>>>" | sed 's/\./_/g'
+```
+`<<<fileName1>>>` is a specjal tag. Script before executing command search for tag inside auto-tag and resolve it first and put result text,
+which replaces tag in command. In this example filename is inputed and dots are replaced with underscore(filename.h --> filename_h).
