@@ -296,7 +296,7 @@ def main():
             print(newProjectDir)
         elif userInput == "2":
             newFileDir = scriptDir + "/NEW_FILES"
-            #get from user th template folder
+            #get from user the template folder
             newFileDir = get_template_path('file', newFileDir)
             clear_screen()
             if newFileDir:
