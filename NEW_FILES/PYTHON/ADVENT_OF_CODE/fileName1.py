@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #Author: <<<AUTHOR>>>
+#Date:<<<DATE>>>
+#Time:<<<TIME>>>
 #based on Advent Of Code template from github.com/matauto/templates
 
 import argparse
@@ -17,26 +19,30 @@ parser.add_argument("file",
                     default = ".",
                     type = Path,
                     help = "input file for script")
+parser.add_argument("part",
+                    default = "0",
+                    type = int,
+                    help = "input file for script")
 args = parser.parse_args()
 
 def main():
     fileName=Path(args.file)
+    partExec=args.part
     if (fileName.exists() and fileName.is_file()):
-        inputFile = open(fileName, 'r', encoding="utf-8")
+        if partExec==0 or partExec==1:
+            #solution for first part of puzzle
+            print("PART ONE")
+            result=0
+            inputFile = open(fileName, 'r', encoding="utf-8")
+            for line in inputFile:
 
-        print("PART ONE")
-        #solution for first part of puzzle
-        for line in inputFile:
+            print("Part one answear: ", result)
 
-        #calculate result
-        result=0
+        if partExec==0 or partExec==2:
+            #solution for second part of puzzle 
+            print("PART TWO")
 
-        print("Part one answear: ", result)
-
-        print("PART TWO")
-        #solution for second part of puzzle 
-
-        print("Part two answear: ", result2)
+            print("Part two answear: ", result)
     else:
         print("it is not file")
 
