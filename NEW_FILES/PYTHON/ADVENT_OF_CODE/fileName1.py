@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#{{{import and argument parser
 #Author: <<<AUTHOR>>>
 #Date:<<<DATE>>>
 #Time:<<<TIME>>>
@@ -22,29 +23,44 @@ parser.add_argument("file",
 parser.add_argument("part",
                     default = "0",
                     type = int,
+                    choices=[0,1,2],
                     help = "input file for script")
 args = parser.parse_args()
+#}}}
+#{{{solve Part One
+def solvePartOne(fileName):
+    #solution for first part of puzzle
+    print("PART ONE")
+    result=0
+    with open(fileName, 'r', encoding="utf-8") as inputFile:
+        for line in inputFile:
+            #process the input file
 
+    print("Part one answear: ", result)
+
+#}}}
+#{{{solve Part Two
+def solvePartTwo(fileName):
+    #solution for second part of puzzle
+    print("PART TWO")
+    result=0
+
+    print("Part two answear: ", result)
+#}}}
+#{{{main
 def main():
     fileName=Path(args.file)
     partExec=args.part
     if (fileName.exists() and fileName.is_file()):
         if partExec==0 or partExec==1:
             #solution for first part of puzzle
-            print("PART ONE")
-            result=0
-            inputFile = open(fileName, 'r', encoding="utf-8")
-            for line in inputFile:
-
-            print("Part one answear: ", result)
-
+            solvePartOne(fileName)
         if partExec==0 or partExec==2:
             #solution for second part of puzzle 
-            print("PART TWO")
-
-            print("Part two answear: ", result)
+            solvePartTwo(fileName)
     else:
         print("it is not file")
 
 if __name__ == "__main__":
     main()
+#}}}

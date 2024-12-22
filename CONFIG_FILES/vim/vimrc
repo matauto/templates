@@ -31,12 +31,15 @@ set noerrorbells
 set regexpengine=0
 "set standard encoding
 set encoding=utf8
+"set foldmethod to marker
+set foldmethod=marker
 
 "WORKAREA LOOK-----------------------------------------------------------
 "syntax higlighting
 syntax on
 "line numbering
 set number
+set relativenumber
 "no wrap lines
 set nowrap
 "set file scrolling when moving cursor
